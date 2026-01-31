@@ -6,43 +6,41 @@ import java.io.OutputStreamWriter;
 import java.util.Stack;
 
 public class Main {
-	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
 	public static void main(String[] args) throws IOException {
+
 		String line = br.readLine();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder res = new StringBuilder();
 		Stack<Character> stack = new Stack<>();
+		boolean isIn = false;
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
 			if (c == '<') {
 				while (!stack.isEmpty()) {
-					sb.append(stack.pop());
+					res.append(stack.pop());
 				}
-
-				sb.append('<');
-				while (line.charAt(i + 1) != '>') {
-					sb.append(line.charAt(i + 1));
-					i++;
+				isIn = true;
+				res.append(c);
+			} else if (c == '>') {
+				isIn = false;
+				res.append(c);
+			} else if (c == ' ' && !isIn) {
+				while (!stack.isEmpty()) {
+					res.append(stack.pop());
 				}
-				i++;
-				sb.append('>');
-				continue;
-			} else if (c == ' ') {
-				if (!stack.isEmpty()) {
-					while (!stack.isEmpty()) {
-						sb.append(stack.pop());
-					}
-				}
-				sb.append(' ');
+				res.append(c);
+			} else if (isIn) {
+				res.append(c);
 			} else {
 				stack.push(c);
 			}
 		}
 		while (!stack.isEmpty()) {
-			sb.append(stack.pop());
+			res.append(stack.pop());
 		}
-		bw.write(sb.toString());
+		bw.write(res.toString());
 		bw.flush();
 		bw.close();
 		br.close();
